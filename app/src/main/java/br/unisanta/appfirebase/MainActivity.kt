@@ -1,7 +1,6 @@
 package br.unisanta.appfirebase
 
 import android.os.Bundle
-import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -28,15 +27,13 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val btnSignInEmail = findViewById<Button>(R.id.btn_sign_in_email)
-        btnSignInEmail.setOnClickListener {
-            createSignInIntent()
-        }
+        createSignInIntent()
     }
 
     private fun createSignInIntent() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
+            AuthUI.IdpConfig.GoogleBuilder().build()
         )
 
         val signInIntent = AuthUI.getInstance()
