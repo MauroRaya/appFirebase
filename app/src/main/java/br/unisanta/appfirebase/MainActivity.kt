@@ -1,7 +1,7 @@
 package br.unisanta.appfirebase
 
 import android.os.Bundle
-import android.widget.Button
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -28,15 +28,13 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val btnSignInEmail = findViewById<Button>(R.id.btn_sign_in_email)
-        btnSignInEmail.setOnClickListener {
-            createSignInIntent()
-        }
+        createSignInIntent()
     }
 
     private fun createSignInIntent() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
+            AuthUI.IdpConfig.GoogleBuilder().build()
         )
 
         val signInIntent = AuthUI.getInstance()
@@ -51,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
-            // ...
+            Log.i("", "$user")
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
