@@ -1,7 +1,7 @@
 package br.unisanta.appfirebase
 
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -9,7 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
     private val signInLauncher = registerForActivityResult(
@@ -28,13 +28,21 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        val btnSignOut = findViewById<FloatingActionButton>(R.id.btn_sign_out)
+
+        btnSignOut.setOnClickListener {
+            signOut()
+            createSignInIntent()
+        }
+
         createSignInIntent()
     }
 
     private fun createSignInIntent() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
-            AuthUI.IdpConfig.GoogleBuilder().build()
+            AuthUI.IdpConfig.GoogleBuilder().build(),
+            AuthUI.IdpConfig.AnonymousBuilder().build()
         )
 
         val signInIntent = AuthUI.getInstance()
@@ -46,15 +54,34 @@ class MainActivity : AppCompatActivity() {
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         val response = result.idpResponse
+
         if (result.resultCode == RESULT_OK) {
-            // Successfully signed in
-            val user = FirebaseAuth.getInstance().currentUser
-            Log.i("", "$user")
+            // val user = FirebaseAuth.getInstance().currentUser
+
+            Toast.makeText(
+                this,
+                "Login bem sucedido",
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
-            // Sign in failed. If response is null the user canceled the
-            // sign-in flow using the back button. Otherwise check
-            // response.getError().getErrorCode() and handle the error.
-            // ...
+            if (response == null) {
+                Toast.makeText(
+                    this,
+                    "Login cancelado",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Erro ao realizar login",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
+    }
+
+    private fun signOut() {
+        AuthUI.getInstance()
+            .signOut(this)
     }
 }
